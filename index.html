@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Express München – Frisch & Lecker</title>
+  <meta name="description" content="Express München – Frische Gözleme und Lahmacun für Events & Catering. Jetzt bestellen oder anfragen!" />
+  <meta property="og:title" content="Express München – Frisch & Lecker" />
+  <meta property="og:description" content="Catering für Veranstaltungen in München – authentisch, hausgemacht, pünktlich." />
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; background:#fff8f0; color:#333; }
+    header, footer { background:#d94f2a; color:white; text-align:center; padding:1.5rem 1rem; }
+    header h1, footer p { margin:0; }
+    main { max-width:800px; margin:auto; padding:2rem 1rem; }
+    .hero { position:relative; }
+    .hero img { width:100%; height:auto; border-radius:12px; box-shadow:0 8px 20px rgba(217,79,42,0.5); transition: opacity 0.5s ease; }
+    .hero-text { position:absolute; bottom:1rem; left:1rem; background:rgba(217,79,42,0.85); color:white; padding:1rem 1.5rem; border-radius:8px; font-size:1.5rem; font-weight:700; }
+    .container { background:white; margin:2rem 0; padding:2rem; border-radius:12px; box-shadow:0 0 20px rgba(0,0,0,0.1); }
+    label { display:block; margin-bottom:0.5rem; font-weight:600; }
+    label.required::after { content: " *"; color: red; }
+    select,input[type="text"],input[type="email"],input[type="tel"],input[type="date"],textarea {
+      width:100%; padding:0.8rem; margin-bottom:1.5rem; border:1.5px solid #ccc; border-radius:6px; font-size:1rem;
+    }
+    .checkbox-group label { font-weight:normal; margin-right:1rem; }
+    .price { text-align:center; font-weight:700; font-size:1.3rem; color:#d94f2a; margin-bottom:1.5rem; }
+    #priceInfo { font-size:0.95rem; color:#444; margin-top:-1rem; margin-bottom:1.5rem; }
+    button { width:100%; padding:1rem; font-size:1.1rem; font-weight:700; background:#d94f2a; color:white; border:none; border-radius:8px; cursor:pointer; }
+    button:hover { background:#bf3d22; }
+    .small-text { font-size:0.85rem; color:#666; margin-top:1rem; }
+    .floating-call { position:fixed; bottom:20px; right:20px; background:#d94f2a; color:#fff; padding:1rem; border-radius:50%; box-shadow:0 4px 12px rgba(0,0,0,0.3); font-size:1.5rem; z-index:1000; text-decoration:none; }
+    .whatsapp-button { display:inline-block; margin:1rem auto; text-align:center; background:#25D366; color:white; padding:0.8rem 1.2rem; border-radius:8px; font-weight:bold; text-decoration:none; }
+    @media(max-width:600px){ .hero-text{font-size:1.2rem;} }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Express München</h1>
+  <p>Frisch & lecker – Gözleme & Lahmacun für Events & Feiern</p>
+  <p>Tel: <a href="tel:01632229705" style="color:#fff; text-decoration:underline;">0163 2229705</a></p>
+</header>
+
+<main>
+  <section class="hero">
+    <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=1200&q=80" alt="Leckeres Essen" loading="lazy" />
+    <div class="hero-text">Schnell. Frisch. Lecker.</div>
+  </section>
+
+  <div class="container">
+    <form id="orderForm">
+      <label for="product" class="required">Produkt auswählen:</label>
+      <select id="product" required>
+        <option value="" disabled selected>Bitte wählen</option>
+        <option value="lahmacun">Lahmacun (20cm)</option>
+        <option value="goezleme">Gözleme (gefüllt)</option>
+      </select>
+
+      <div id="priceInfo"></div>
+
+      <div id="lahmaFields" style="display:none;">
+        <label for="lahmaQty" class="required">Anzahl Lahmacun:</label>
+        <select id="lahmaQty">
+          <option value="" disabled selected>Bitte wählen</option>
+          <option value="10">10 Stück</option>
+          <option value="25">25 Stück</option>
+          <option value="50">50 Stück</option>
+          <option value="75">75 Stück</option>
+          <option value="100">100 Stück</option>
+          <option value="200">200 Stück</option>
+        </select>
+        <label for="lahmaSalad">Salat extra (0,75 €):</label>
+        <select id="lahmaSalad">
+          <option value="0" selected>Nein</option>
+          <option value="1">Ja</option>
+        </select>
+      </div>
+
+      <div id="goezFields" style="display:none;">
+        <label for="goezQty" class="required">Anzahl Gözleme:</label>
+        <select id="goezQty">
+          <option value="" disabled selected>Bitte wählen</option>
+          <option value="15">15 Stück</option>
+          <option value="25">25 Stück</option>
+          <option value="50">50 Stück</option>
+          <option value="100">100 Stück</option>
+          <option value="200">200 Stück</option>
+        </select>
+        <fieldset class="checkbox-group">
+          <legend>Extras (Aufpreis pro Stück):</legend>
+          <label><input type="checkbox" id="spinach" /> Spinat (+0,60 €)</label>
+          <label><input type="checkbox" id="cheese" /> Käse (+0,80 €)</label>
+        </fieldset>
+      </div>
+
+      <label for="date" class="required">Lieferdatum:</label>
+      <input type="date" id="date" required min="" />
+
+      <div class="price" id="totalPrice">Gesamtpreis: 0,00 €</div>
+
+      <label for="wishes">Sonderwünsche (optional):</label>
+      <textarea id="wishes" rows="3" placeholder="Bitte hier eingeben..."></textarea>
+
+      <label for="name" class="required">Name:</label>
+      <input type="text" id="name" required placeholder="Name" />
+      <label for="email" class="required">E-Mail:</label>
+      <input type="email" id="email" required placeholder="E-Mail" />
+      <label for="phone" class="required">Telefonnummer:</label>
+      <input type="tel" id="phone" required placeholder="Telefonnummer" />
+      <label for="address" class="required">Lieferadresse:</label>
+      <textarea id="address" rows="3" required placeholder="Straße, Hausnummer, PLZ, Ort"></textarea>
+
+      <p class="small-text">Mit dem Absenden stimmen Sie der Verarbeitung Ihrer Daten gemäß unserer <a href="/datenschutz.html" target="_blank">Datenschutzerklärung</a> zu.</p>
+
+      <button type="submit">Bestellanfrage senden</button>
+    </form>
+
+    <a class="whatsapp-button" href="https://wa.me/491632229705" target="_blank">📱 Jetzt über WhatsApp anfragen</a>
+  </div>
+</main>
+
+<a href="tel:01632229705" class="floating-call" title="Anrufen">📞</a>
+
+<footer>
+  <p>© 2025 Express München</p>
+</footer>
+
+<script>
+  const dateInput = document.getElementById('date');
+  dateInput.min = new Date().toISOString().split('T')[0];
+
+  const pricesUp = {
+    lahmacun: { 10: 3.00, 25: 3.50, 50: 4.00, 75: 4.50, 100: 5.00, 200: 6.00 },
+    goezleme: { 15: 3.50, 25: 3.75, 50: 5.00, 100: 5.50, 200: 6.00 }
+  };
+
+  const saladUp = 0.75, spUp = 0.60, chUp = 0.80;
+  const pSel = document.getElementById('product'),
+        lQ = document.getElementById('lahmaQty'),
+        lS = document.getElementById('lahmaSalad'),
+        gQ = document.getElementById('goezQty'),
+        sp = document.getElementById('spinach'),
+        ch = document.getElementById('cheese'),
+        tp = document.getElementById('totalPrice'),
+        heroI = document.querySelector('.hero img'),
+        heroT = document.querySelector('.hero-text'),
+        priceInfo = document.getElementById('priceInfo');
+
+  const priceTexts = {
+    lahmacun: 'Lahmacun: 10 Stk = 3,00 €, 25 = 3,50 €, 50 = 4,00 €, ... + Salat 0,75 €',
+    goezleme: 'Gözleme: 15 Stk = 3,50 €, 25 = 3,75 €, 50 = 5,00 € ... + Spinat 0,60 €, Käse 0,80 €'
+  };
+
+  pSel.addEventListener('change', () => {
+    document.getElementById('lahmaFields').style.display = pSel.value==='lahmacun'?'block':'none';
+    document.getElementById('goezFields').style.display = pSel.value==='goezleme'?'block':'none';
+    heroI.style.opacity = 0;
+    setTimeout(() => {
+      if (pSel.value==='lahmacun') {
+        heroI.src='https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=1200&q=80';
+        heroT.textContent='Lahmacun – Schnell. Frisch. Lecker.';
+        priceInfo.textContent = priceTexts.lahmacun;
+      } else if (pSel.value==='goezleme') {
+        heroI.src='https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=1200&q=80';
+        heroT.textContent='Gözleme – Herzhaft gefüllt.';
+        priceInfo.textContent = priceTexts.goezleme;
+      }
+      heroI.onload = () => { heroI.style.opacity = 1; };
+    }, 300);
+    tp.textContent='Gesamtpreis: 0,00 €';
+  });
+
+  [lQ,lS,gQ,sp,ch].forEach(el=>el.addEventListener('change', calc));
+
+  function calc() {
+    let pr=0,qty=0;
+    if(pSel.value==='lahmacun'){
+      qty = parseInt(lQ.value)||0; pr = pricesUp.lahmacun[qty]||0;
+      if(lS.value==='1') pr += saladUp;
+    }
+    if(pSel.value==='goezleme'){
+      qty = parseInt(gQ.value)||0; pr = pricesUp.goezleme[qty]||0;
+      pr += (sp.checked?spUp:0)+(ch.checked?chUp:0);
+    }
+    tp.textContent = 'Gesamtpreis: '+(pr*qty).toFixed(2)+' €';
+  }
+
+  document.getElementById('orderForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    if(!pSel.value) return alert('Bitte Produkt wählen.');
+    if(pSel.value==='lahmacun' && !lQ.value) return alert('Bitte Menge Lahmacun wählen.');
+    if(pSel.value==='goezleme' && !gQ.value) return alert('Bitte Menge Gözleme wählen.');
+    if(!dateInput.value) return alert('Bitte Datum wählen.');
+    for (let id of ['phone','address','name','email']) {
+      if(!document.getElementById(id).value.trim()) return alert('Bitte alle Pflichtfelder ausfüllen.');
+    }
+
+    const product = pSel.value,
+          quantity = product==='lahmacun'?lQ.value:gQ.value,
+          salad = product==='lahmacun'?(lS.value==='1'?'Ja':'Nein'):'-',
+          extras = product==='goezleme'?[sp.checked?'Spinat':null,ch.checked?'Käse':null].filter(Boolean).join(', ')||'Keine':'-',
+          date = dateInput.value,
+          phone = encodeURIComponent(document.getElementById('phone').value.trim()),
+          address = encodeURIComponent(document.getElementById('address').value.trim()),
+          wishes = encodeURIComponent(document.getElementById('wishes').value.trim()),
+          name = encodeURIComponent(document.getElementById('name').value.trim()),
+          email = encodeURIComponent(document.getElementById('email').value.trim()),
+          total = tp.textContent.replace('Gesamtpreis: ','');
+
+    let body = `Produkt: ${product}%0D%0AMenge: ${quantity}`;
+    if(product==='lahmacun') body+=`%0D%0ASalat: ${salad}`;
+    if(product==='goezleme') body+=`%0D%0AExtras: ${extras}`;
+    body+=`%0D%0ALieferdatum: ${date}%0D%0ATelefon: ${phone}%0D%0AAdresse: ${address}%0D%0ASonderwünsche: ${wishes}%0D%0AName: ${name}%0D%0AEmail: ${email}%0D%0AGesamtpreis: ${total}`;
+
+    window.location.href = `mailto:deine-email@beispiel.de?subject=${encodeURIComponent('Bestellung Express München')}&body=${body}`;
+  });
+</script>
+
+</body>
+</html>
