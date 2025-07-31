@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -49,9 +48,9 @@
   </section>
 
   <div class="container">
-    <form id="orderForm">
+    <form action="https://formspree.io/f/xkgzzyne" method="POST" data-formspree data-redirect="/danke.html">
       <label for="product" class="required">Produkt auswählen:</label>
-      <select id="product" required>
+      <select name="Produkt" id="product" required>
         <option value="" disabled selected>Bitte wählen</option>
         <option value="lahmacun">Lahmacun (20cm)</option>
         <option value="goezleme">Gözleme (gefüllt)</option>
@@ -61,7 +60,7 @@
 
       <div id="lahmaFields" style="display:none;">
         <label for="lahmaQty" class="required">Anzahl Lahmacun:</label>
-        <select id="lahmaQty">
+        <select name="Menge Lahmacun" id="lahmaQty">
           <option value="" disabled selected>Bitte wählen</option>
           <option value="10">10 Stück</option>
           <option value="25">25 Stück</option>
@@ -71,15 +70,15 @@
           <option value="200">200 Stück</option>
         </select>
         <label for="lahmaSalad">Salat extra (0,75 €):</label>
-        <select id="lahmaSalad">
-          <option value="0" selected>Nein</option>
-          <option value="1">Ja</option>
+        <select name="Salat" id="lahmaSalad">
+          <option value="Nein" selected>Nein</option>
+          <option value="Ja">Ja</option>
         </select>
       </div>
 
       <div id="goezFields" style="display:none;">
         <label for="goezQty" class="required">Anzahl Gözleme:</label>
-        <select id="goezQty">
+        <select name="Menge Gözleme" id="goezQty">
           <option value="" disabled selected>Bitte wählen</option>
           <option value="15">15 Stück</option>
           <option value="25">25 Stück</option>
@@ -89,35 +88,34 @@
         </select>
         <fieldset class="checkbox-group">
           <legend>Extras (Aufpreis pro Stück):</legend>
-          <label><input type="checkbox" id="spinach" /> Spinat (+0,60 €)</label>
-          <label><input type="checkbox" id="cheese" /> Käse (+0,80 €)</label>
+          <label><input type="checkbox" name="Extras" value="Spinat" /> Spinat (+0,60 €)</label>
+          <label><input type="checkbox" name="Extras" value="Käse" /> Käse (+0,80 €)</label>
         </fieldset>
       </div>
 
       <label for="date" class="required">Lieferdatum:</label>
-      <input type="date" id="date" required min="" />
+      <input type="date" name="Lieferdatum" id="date" required />
 
       <div class="price" id="totalPrice">Gesamtpreis: 0,00 €</div>
 
-      <label for="wishes">Sonderwünsche (optional):</label>
-      <textarea id="wishes" rows="3" placeholder="Bitte hier eingeben..."></textarea>
-
-      <label for="name" class="required">Name:</label>
-      <input type="text" id="name" required placeholder="Name" />
-      <label for="email" class="required">E-Mail:</label>
-      <input type="email" id="email" required placeholder="E-Mail" />
-      <label for="phone" class="required">Telefonnummer:</label>
-      <input type="tel" id="phone" required placeholder="Telefonnummer" />
-      <label for="address" class="required">Lieferadresse:</label>
-      <textarea id="address" rows="3" required placeholder="Straße, Hausnummer, PLZ, Ort"></textarea>
-
-      <!-- NEU: Bezahlmethode -->
       <label for="payment" class="required">Bezahlmethode:</label>
-      <select id="payment" name="payment" required>
-        <option value="" disabled selected>Bitte wählen</option>
+      <select id="payment" name="Bezahlmethode" required>
+        <option value="">Bitte wählen</option>
         <option value="Barzahlung">Barzahlung</option>
         <option value="Überweisung">Überweisung</option>
       </select>
+
+      <label for="wishes">Sonderwünsche (optional):</label>
+      <textarea id="wishes" name="Sonderwünsche" rows="3" placeholder="Bitte hier eingeben..."></textarea>
+
+      <label for="name" class="required">Name:</label>
+      <input type="text" name="Name" id="name" required placeholder="Name" />
+      <label for="email" class="required">E-Mail:</label>
+      <input type="email" name="Email" id="email" required placeholder="E-Mail" />
+      <label for="phone" class="required">Telefonnummer:</label>
+      <input type="tel" name="Telefon" id="phone" required placeholder="Telefonnummer" />
+      <label for="address" class="required">Lieferadresse:</label>
+      <textarea name="Adresse" id="address" rows="3" required placeholder="Straße, Hausnummer, PLZ, Ort"></textarea>
 
       <p class="small-text">Mit dem Absenden stimmen Sie der Verarbeitung Ihrer Daten gemäß unserer <a href="/datenschutz.html" target="_blank">Datenschutzerklärung</a> zu.</p>
 
@@ -137,29 +135,25 @@
 <script>
   const dateInput = document.getElementById('date');
   dateInput.min = new Date().toISOString().split('T')[0];
-
   const pricesUp = {
     lahmacun: { 10: 3.00, 25: 3.50, 50: 4.00, 75: 4.50, 100: 5.00, 200: 6.00 },
     goezleme: { 15: 3.50, 25: 3.75, 50: 5.00, 100: 5.50, 200: 6.00 }
   };
-
   const saladUp = 0.75, spUp = 0.60, chUp = 0.80;
   const pSel = document.getElementById('product'),
         lQ = document.getElementById('lahmaQty'),
         lS = document.getElementById('lahmaSalad'),
         gQ = document.getElementById('goezQty'),
-        sp = document.getElementById('spinach'),
-        ch = document.getElementById('cheese'),
         tp = document.getElementById('totalPrice'),
+        sp = document.querySelector('input[value="Spinat"]'),
+        ch = document.querySelector('input[value="Käse"]'),
         heroI = document.querySelector('.hero img'),
         heroT = document.querySelector('.hero-text'),
         priceInfo = document.getElementById('priceInfo');
-
   const priceTexts = {
     lahmacun: 'Lahmacun: 10 Stk = 3,00 €, 25 = 3,50 €, 50 = 4,00 €, ... + Salat 0,75 €',
     goezleme: 'Gözleme: 15 Stk = 3,50 €, 25 = 3,75 €, 50 = 5,00 € ... + Spinat 0,60 €, Käse 0,80 €'
   };
-
   pSel.addEventListener('change', () => {
     document.getElementById('lahmaFields').style.display = pSel.value==='lahmacun'?'block':'none';
     document.getElementById('goezFields').style.display = pSel.value==='goezleme'?'block':'none';
@@ -178,14 +172,12 @@
     }, 300);
     tp.textContent='Gesamtpreis: 0,00 €';
   });
-
   [lQ,lS,gQ,sp,ch].forEach(el=>el.addEventListener('change', calc));
-
   function calc() {
     let pr=0,qty=0;
     if(pSel.value==='lahmacun'){
       qty = parseInt(lQ.value)||0; pr = pricesUp.lahmacun[qty]||0;
-      if(lS.value==='1') pr += saladUp;
+      if(lS.value==='Ja') pr += saladUp;
     }
     if(pSel.value==='goezleme'){
       qty = parseInt(gQ.value)||0; pr = pricesUp.goezleme[qty]||0;
@@ -193,45 +185,6 @@
     }
     tp.textContent = 'Gesamtpreis: '+(pr*qty).toFixed(2)+' €';
   }
-
-  document.getElementById('orderForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    if(!pSel.value) return alert('Bitte Produkt wählen.');
-    if(pSel.value==='lahmacun' && !lQ.value) return alert('Bitte Menge Lahmacun wählen.');
-    if(pSel.value==='goezleme' && !gQ.value) return alert('Bitte Menge Gözleme wählen.');
-    if(!dateInput.value) return alert('Bitte Datum wählen.');
-    if(!document.getElementById('payment').value) return alert('Bitte Bezahlmethode wählen.');
-    for (let id of ['phone','address','name','email']) {
-      if(!document.getElementById(id).value.trim()) return alert('Bitte alle Pflichtfelder ausfüllen.');
-    }
-
-    const product = pSel.value,
-          quantity = product==='lahmacun'?lQ.value:gQ.value,
-          salad = product==='lahmacun'?(lS.value==='1'?'Ja':'Nein'):'-',
-          extras = product==='goezleme'?[sp.checked?'Spinat':null,ch.checked?'Käse':null].filter(Boolean).join(', ')||'Keine':'-',
-          date = dateInput.value,
-          payment = encodeURIComponent(document.getElementById('payment').value),
-          phone = encodeURIComponent(document.getElementById('phone').value.trim()),
-          address = encodeURIComponent(document.getElementById('address').value.trim()),
-          wishes = encodeURIComponent(document.getElementById('wishes').value.trim()),
-          name = encodeURIComponent(document.getElementById('name').value.trim()),
-          email = encodeURIComponent(document.getElementById('email').value.trim()),
-          total = tp.textContent.replace('Gesamtpreis: ','');
-
-    let body = `Produkt: ${product}%0D%0AMenge: ${quantity}`;
-    if(product==='lahmacun') body+=`%0D%0ASalat: ${salad}`;
-    if(product==='goezleme') body+=`%0D%0AExtras: ${extras}`;
-    body+=`%0D%0ALieferdatum: ${date}`;
-    body+=`%0D%0ABezahlmethode: ${payment}`;
-    body+=`%0D%0ATelefon: ${phone}`;
-    body+=`%0D%0AAdresse: ${address}`;
-    body+=`%0D%0ASonderwünsche: ${wishes}`;
-    body+=`%0D%0AName: ${name}`;
-    body+=`%0D%0AEmail: ${email}`;
-    body+=`%0D%0AGesamtpreis: ${total}`;
-
-    window.location.href = `mailto:deine-email@beispiel.de?subject=${encodeURIComponent('Bestellung Express München')}&body=${body}`;
-  });
 </script>
 
 </body>
