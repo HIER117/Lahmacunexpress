@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -110,6 +111,14 @@
       <label for="address" class="required">Lieferadresse:</label>
       <textarea id="address" rows="3" required placeholder="Straße, Hausnummer, PLZ, Ort"></textarea>
 
+      <!-- NEU: Bezahlmethode -->
+      <label for="payment" class="required">Bezahlmethode:</label>
+      <select id="payment" name="payment" required>
+        <option value="" disabled selected>Bitte wählen</option>
+        <option value="Barzahlung">Barzahlung</option>
+        <option value="Überweisung">Überweisung</option>
+      </select>
+
       <p class="small-text">Mit dem Absenden stimmen Sie der Verarbeitung Ihrer Daten gemäß unserer <a href="/datenschutz.html" target="_blank">Datenschutzerklärung</a> zu.</p>
 
       <button type="submit">Bestellanfrage senden</button>
@@ -191,6 +200,7 @@
     if(pSel.value==='lahmacun' && !lQ.value) return alert('Bitte Menge Lahmacun wählen.');
     if(pSel.value==='goezleme' && !gQ.value) return alert('Bitte Menge Gözleme wählen.');
     if(!dateInput.value) return alert('Bitte Datum wählen.');
+    if(!document.getElementById('payment').value) return alert('Bitte Bezahlmethode wählen.');
     for (let id of ['phone','address','name','email']) {
       if(!document.getElementById(id).value.trim()) return alert('Bitte alle Pflichtfelder ausfüllen.');
     }
@@ -200,6 +210,7 @@
           salad = product==='lahmacun'?(lS.value==='1'?'Ja':'Nein'):'-',
           extras = product==='goezleme'?[sp.checked?'Spinat':null,ch.checked?'Käse':null].filter(Boolean).join(', ')||'Keine':'-',
           date = dateInput.value,
+          payment = encodeURIComponent(document.getElementById('payment').value),
           phone = encodeURIComponent(document.getElementById('phone').value.trim()),
           address = encodeURIComponent(document.getElementById('address').value.trim()),
           wishes = encodeURIComponent(document.getElementById('wishes').value.trim()),
@@ -210,7 +221,14 @@
     let body = `Produkt: ${product}%0D%0AMenge: ${quantity}`;
     if(product==='lahmacun') body+=`%0D%0ASalat: ${salad}`;
     if(product==='goezleme') body+=`%0D%0AExtras: ${extras}`;
-    body+=`%0D%0ALieferdatum: ${date}%0D%0ATelefon: ${phone}%0D%0AAdresse: ${address}%0D%0ASonderwünsche: ${wishes}%0D%0AName: ${name}%0D%0AEmail: ${email}%0D%0AGesamtpreis: ${total}`;
+    body+=`%0D%0ALieferdatum: ${date}`;
+    body+=`%0D%0ABezahlmethode: ${payment}`;
+    body+=`%0D%0ATelefon: ${phone}`;
+    body+=`%0D%0AAdresse: ${address}`;
+    body+=`%0D%0ASonderwünsche: ${wishes}`;
+    body+=`%0D%0AName: ${name}`;
+    body+=`%0D%0AEmail: ${email}`;
+    body+=`%0D%0AGesamtpreis: ${total}`;
 
     window.location.href = `mailto:deine-email@beispiel.de?subject=${encodeURIComponent('Bestellung Express München')}&body=${body}`;
   });
