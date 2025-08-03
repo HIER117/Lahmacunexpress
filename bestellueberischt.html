@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bestellübersicht – Express München</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#fff8f0; margin:0; padding:2rem; color:#333; }
+    h1 { color:#d94f2a; }
+    .container { background:#fff; padding:2rem; max-width:800px; margin:auto; border-radius:12px; box-shadow:0 0 20px rgba(0,0,0,0.1); }
+    .summary { margin-bottom:2rem; }
+    .summary h2 { margin-top:0; }
+    ul { list-style:none; padding-left:0; }
+    li { padding:0.4rem 0; border-bottom:1px solid #eee; }
+    .actions { display:flex; gap:1rem; justify-content:flex-end; margin-top: 1.5rem; }
+    button { padding:0.8rem 1.5rem; font-size:1rem; font-weight:bold; border:none; border-radius:8px; cursor:pointer; }
+    .back { background:#ccc; color:#333; }
+    .submit { background:#d94f2a; color:#fff; }
+    .form-group { margin-top: 1rem; }
+    label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+    input[type="text"], input[type="email"] { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Bestellübersicht</h1>
+    <div class="summary">
+      <h2>Ihre Auswahl:</h2>
+      <ul id="summaryList">
+        <!-- JavaScript füllt diese Liste automatisch -->
+      </ul>
+      <p><strong id="summaryTotal">Gesamtpreis: 0,00 €</strong></p>
+    </div>
+
+    <form id="finalForm" action="https://formspree.io/f/xkgzzyne?redirect=https://www.lahmacunexpress.de/danke.html" method="POST">
+      <!-- Sichtbare Felder für Kundendaten -->
+
+
+      <!-- Versteckte Felder für die finale Übertragung -->
+      <input type="hidden" name="Zusammenfassung" id="hiddenSummary">
+      <input type="hidden" name="Gesamtpreis" id="hiddenTotal">
+
+      <div class="actions">
+        <button type="button" class="back" onclick="history.back()">Zurück</button>
+        <button type="submit" class="submit">Jetzt verbindlich anfragen</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const order = JSON.parse(localStorage.getItem('orderData')) || {};
+
+    const summaryList = document.getElementById('summaryList');
+    const summaryTotal = document.getElementById('summaryTotal');
+    const hiddenSummary = document.getElementById('hiddenSummary');
+    const hiddenTotal = document.getElementById('hiddenTotal');
+
+    let summaryLines = [];
+
+    if(order.produkt){
+      summaryLines.push(order.produkt + ': ' + order.menge + ' Stück');
+      if(order.extras && order.extras.length) summaryLines = summaryLines.concat(order.extras);
+      if(order.salad) summaryLines.push('Salat: ' + order.salad);
+      summaryLines.push('Lieferdatum: ' + order.datum);
+      summaryLines.push('Lieferzeit: ' + order.zeit);
+      summaryLines.push('Zahlung: ' + order.zahlung);
+      summaryLines.push('Adresse: ' + order.adresse);
+    }
+
+    const total = order.total || '0,00 €';
+    summaryLines.forEach(line => {
+      const li = document.createElement('li');
+      li.textContent = line;
+      summaryList.appendChild(li);
+    });
+
+    summaryTotal.textContent = 'Gesamtpreis: ' + total;
+    hiddenSummary.value = summaryLines.join('\n');
+    hiddenTotal.value = total;
+  </script>
+</body>
+</html>
