@@ -47,7 +47,7 @@
   </section>
 
 <div class="container">
-  <form action="https://formspree.io/f/xkgzzyne?redirect=https://lahmacunexpress.de/danke.html" method="POST">
+  <form action="mailto:kontakt.lahmacunexpress@w1093030.checkdomain.net" method="POST" enctype="text/plain" onsubmit="window.location.href='https://www.lahmacunexpress.de/danke.html'; return true;">
     <label for="product" class="required">Produkt auswählen:</label>
     <select name="Produkt" id="product" required>
       <option value="" disabled selected>Bitte wählen</option>
@@ -96,6 +96,14 @@
     <label for="lieferzeit" class="required">Lieferzeit (zwischen 10:00 und 20:00 Uhr):</label>
     <input type="time" name="Lieferzeit" id="lieferzeit" required min="10:00" max="20:00" />
     <small>Lieferzeit bitte zwischen 10:00 und 20:00 Uhr wählen</small>
+
+    <fieldset class="checkbox-group">
+      <legend>Art der Veranstaltung (optional):</legend>
+      <label><input type="checkbox" name="Veranstaltung" value="Privatfeier" /> Privatfeier</label>
+      <label><input type="checkbox" name="Veranstaltung" value="Firmenfeier" /> Firmenfeier</label>
+      <label><input type="checkbox" name="Veranstaltung" value="Geburtstag" /> Geburtstag</label>
+      <label><input type="checkbox" name="Veranstaltung" value="Sonstiges" /> Sonstiges</label>
+    </fieldset>
 
     <div class="price" id="totalPrice">Gesamtpreis: 0,00 €</div>
 
