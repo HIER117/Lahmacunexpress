@@ -19,7 +19,7 @@
     .container { background:white; margin:2rem 0; padding:2rem; border-radius:12px; box-shadow:0 0 20px rgba(0,0,0,0.1); }
     label { display:block; margin-bottom:0.5rem; font-weight:600; }
     label.required::after { content: " *"; color: red; }
-    select,input[type="text"],input[type="email"],input[type="tel"],input[type="date"],textarea {
+    select,input[type="text"],input[type="email"],input[type="tel"],input[type="date"],input[type="time"],textarea {
       width:100%; padding:0.8rem; margin-bottom:1.5rem; border:1.5px solid #ccc; border-radius:6px; font-size:1rem;
     }
     .checkbox-group label { font-weight:normal; margin-right:1rem; }
@@ -67,7 +67,6 @@
           <option value="50">50 Stück</option>
           <option value="75">75 Stück</option>
           <option value="100">100 Stück</option>
-          <option value="200">200 Stück</option>
         </select>
         <label for="lahmaSalad">Salat extra (0,75 €):</label>
         <select name="Salat" id="lahmaSalad">
@@ -84,7 +83,6 @@
           <option value="25">25 Stück</option>
           <option value="50">50 Stück</option>
           <option value="100">100 Stück</option>
-          <option value="200">200 Stück</option>
         </select>
         <fieldset class="checkbox-group">
           <legend>Extras (Aufpreis pro Stück):</legend>
@@ -93,8 +91,11 @@
         </fieldset>
       </div>
 
-      <label for="date" class="required">Lieferdatum:</label>
+      <label for="date" class="required">Lieferdatum (mind. 1 Tag im Voraus):</label>
       <input type="date" name="Lieferdatum" id="date" required />
+
+      <label for="lieferzeit" class="required">Lieferzeit:</label>
+      <input type="time" name="Lieferzeit" id="lieferzeit" required />
 
       <div class="price" id="totalPrice">Gesamtpreis: 0,00 €</div>
 
@@ -117,16 +118,14 @@
       <label for="address" class="required">Lieferadresse:</label>
       <textarea name="Adresse" id="address" rows="3" required placeholder="Straße, Hausnummer, PLZ, Ort"></textarea>
 
+      <p class="small-text">Bitte beachten: Die Bestellung wird frisch zubereitet. Daher benötigen wir mindestens 1 Werktag Vorlaufzeit. Wir melden uns nach Absenden der Anfrage telefonisch oder per E-Mail.</p>
+
       <p class="small-text">Mit dem Absenden stimmen Sie der Verarbeitung Ihrer Daten gemäß unserer <a href="/datenschutz.html" target="_blank">Datenschutzerklärung</a> zu.</p>
 
       <button type="submit">Bestellanfrage senden</button>
     </form>
-
-    <a class="whatsapp-button" href="https://wa.me/491632229705" target="_blank">📱 Jetzt über WhatsApp anfragen</a>
   </div>
 </main>
-
-<a href="tel:01632229705" class="floating-call" title="Anrufen">📞</a>
 
 <footer>
   <p>© 2025 Express München</p>
@@ -134,7 +133,10 @@
 
 <script>
   const dateInput = document.getElementById('date');
-  dateInput.min = new Date().toISOString().split('T')[0];
+  const today = new Date();
+  today.setDate(today.getDate() + 2);
+  dateInput.min = today.toISOString().split('T')[0];
+
   const pricesUp = {
     lahmacun: { 10: 3.00, 25: 3.50, 50: 4.00, 75: 4.50, 100: 5.00, 200: 6.00 },
     goezleme: { 15: 3.50, 25: 3.75, 50: 5.00, 100: 5.50, 200: 6.00 }
