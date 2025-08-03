@@ -28,8 +28,8 @@
     button { width:100%; padding:1rem; font-size:1.1rem; font-weight:700; background:#d94f2a; color:white; border:none; border-radius:8px; cursor:pointer; }
     button:hover { background:#bf3d22; }
     .small-text { font-size:0.85rem; color:#666; margin-top:1rem; }
-    .floating-call { position:fixed; bottom:20px; right:20px; background:#d94f2a; color:#fff; padding:1rem; border-radius:50%; box-shadow:0 4px 12px rgba(0,0,0,0.3); font-size:1.5rem; z-index:1000; text-decoration:none; }
-    .whatsapp-button { display:inline-block; margin:1rem auto; text-align:center; background:#25D366; color:white; padding:0.8rem 1.2rem; border-radius:8px; font-weight:bold; text-decoration:none; }
+    .toggle-wishes { cursor:pointer; color:#d94f2a; font-weight:600; margin-bottom:0.5rem; display:inline-block; }
+    #wishesBox { display:none; }
     @media(max-width:600px){ .hero-text{font-size:1.2rem;} }
   </style>
 </head>
@@ -38,7 +38,6 @@
 <header>
   <h1>Express München</h1>
   <p>Frisch & lecker – Gözleme & Lahmacun für Events & Feiern</p>
-  <p>Tel: <a href="tel:01632229705" style="color:#fff; text-decoration:underline;">0163 2229705</a></p>
 </header>
 
 <main>
@@ -56,75 +55,79 @@
       <option value="goezleme">Gözleme (gefüllt)</option>
     </select>
 
-      <div id="priceInfo"></div>
+    <div id="priceInfo"></div>
 
-      <div id="lahmaFields" style="display:none;">
-        <label for="lahmaQty" class="required">Anzahl Lahmacun:</label>
-        <select name="Menge Lahmacun" id="lahmaQty">
-          <option value="" disabled selected>Bitte wählen</option>
-          <option value="10">10 Stück</option>
-          <option value="25">25 Stück</option>
-          <option value="50">50 Stück</option>
-          <option value="75">75 Stück</option>
-          <option value="100">100 Stück</option>
-        </select>
-        <label for="lahmaSalad">Salat extra (0,75 €):</label>
-        <select name="Salat" id="lahmaSalad">
-          <option value="Nein" selected>Nein</option>
-          <option value="Ja">Ja</option>
-        </select>
-      </div>
-
-      <div id="goezFields" style="display:none;">
-        <label for="goezQty" class="required">Anzahl Gözleme:</label>
-        <select name="Menge Gözleme" id="goezQty">
-          <option value="" disabled selected>Bitte wählen</option>
-          <option value="15">15 Stück</option>
-          <option value="25">25 Stück</option>
-          <option value="50">50 Stück</option>
-          <option value="100">100 Stück</option>
-        </select>
-        <fieldset class="checkbox-group">
-          <legend>Extras (Aufpreis pro Stück):</legend>
-          <label><input type="checkbox" name="Extras" value="Spinat" /> Spinat (+0,60 €)</label>
-          <label><input type="checkbox" name="Extras" value="Käse" /> Käse (+0,80 €)</label>
-        </fieldset>
-      </div>
-
-      <label for="date" class="required">Lieferdatum (mind. 1 Tag im Voraus):</label>
-      <input type="date" name="Lieferdatum" id="date" required />
-
-      <label for="lieferzeit" class="required">Lieferzeit:</label>
-      <input type="time" name="Lieferzeit" id="lieferzeit" required />
-
-      <div class="price" id="totalPrice">Gesamtpreis: 0,00 €</div>
-
-      <label for="payment" class="required">Bezahlmethode:</label>
-      <select id="payment" name="Bezahlmethode" required>
-        <option value="">Bitte wählen</option>
-        <option value="Barzahlung">Barzahlung</option>
-        <option value="Überweisung">Überweisung</option>
+    <div id="lahmaFields" style="display:none;">
+      <label for="lahmaQty" class="required">Anzahl Lahmacun:</label>
+      <select name="Menge Lahmacun" id="lahmaQty">
+        <option value="" disabled selected>Bitte wählen</option>
+        <option value="10">10 Stück</option>
+        <option value="25">25 Stück</option>
+        <option value="50">50 Stück</option>
+        <option value="75">75 Stück</option>
+        <option value="100">100 Stück</option>
       </select>
+      <label for="lahmaSalad">Salat extra (0,75 €):</label>
+      <select name="Salat" id="lahmaSalad">
+        <option value="Nein" selected>Nein</option>
+        <option value="Ja">Ja</option>
+      </select>
+    </div>
 
+    <div id="goezFields" style="display:none;">
+      <label for="goezQty" class="required">Anzahl Gözleme:</label>
+      <select name="Menge Gözleme" id="goezQty">
+        <option value="" disabled selected>Bitte wählen</option>
+        <option value="15">15 Stück</option>
+        <option value="25">25 Stück</option>
+        <option value="50">50 Stück</option>
+        <option value="100">100 Stück</option>
+      </select>
+      <fieldset class="checkbox-group">
+        <legend>Extras (Aufpreis pro Stück):</legend>
+        <label><input type="checkbox" name="Extras" value="Spinat" /> Spinat (+0,60 €)</label>
+        <label><input type="checkbox" name="Extras" value="Käse" /> Käse (+0,80 €)</label>
+      </fieldset>
+    </div>
+
+    <label for="date" class="required">Lieferdatum (mind. 2 Tage Vorlauf):</label>
+    <input type="date" name="Lieferdatum" id="date" required />
+
+    <label for="lieferzeit" class="required">Lieferzeit (zwischen 10:00 und 20:00 Uhr):</label>
+    <input type="time" name="Lieferzeit" id="lieferzeit" required min="10:00" max="20:00" />
+    <small>Lieferzeit bitte zwischen 10:00 und 20:00 Uhr wählen</small>
+
+    <div class="price" id="totalPrice">Gesamtpreis: 0,00 €</div>
+
+    <label for="payment" class="required">Bezahlmethode:</label>
+    <select id="payment" name="Bezahlmethode" required>
+      <option value="">Bitte wählen</option>
+      <option value="Barzahlung">Barzahlung</option>
+      <option value="Überweisung">Überweisung</option>
+    </select>
+
+    <span class="toggle-wishes" onclick="document.getElementById('wishesBox').style.display='block'; this.style.display='none';">+ Sonderwünsche angeben</span>
+    <div id="wishesBox">
       <label for="wishes">Sonderwünsche (optional):</label>
       <textarea id="wishes" name="Sonderwünsche" rows="3" placeholder="Bitte hier eingeben..."></textarea>
+    </div>
 
-      <label for="name" class="required">Name:</label>
-      <input type="text" name="Name" id="name" required placeholder="Name" />
-      <label for="email" class="required">E-Mail:</label>
-      <input type="email" name="Email" id="email" required placeholder="E-Mail" />
-      <label for="phone" class="required">Telefonnummer:</label>
-      <input type="tel" name="Telefon" id="phone" required placeholder="Telefonnummer" />
-      <label for="address" class="required">Lieferadresse:</label>
-      <textarea name="Adresse" id="address" rows="3" required placeholder="Straße, Hausnummer, PLZ, Ort"></textarea>
+    <label for="name" class="required">Name:</label>
+    <input type="text" name="Name" id="name" required placeholder="Name" />
+    <label for="email" class="required">E-Mail:</label>
+    <input type="email" name="Email" id="email" required placeholder="E-Mail" />
+    <label for="phone" class="required">Telefonnummer:</label>
+    <input type="tel" name="Telefon" id="phone" required placeholder="Telefonnummer" />
+    <label for="address" class="required">Lieferadresse:</label>
+    <textarea name="Adresse" id="address" rows="3" required placeholder="Straße, Hausnummer, PLZ, Ort"></textarea>
 
-      <p class="small-text">Bitte beachten: Die Bestellung wird frisch zubereitet. Daher benötigen wir mindestens 1 Werktag Vorlaufzeit. Wir melden uns nach Absenden der Anfrage telefonisch oder per E-Mail.</p>
+    <p class="small-text">Bitte beachten: Die Bestellung wird frisch zubereitet. Daher benötigen wir mindestens 2 Werktage Vorlaufzeit. Wir melden uns nach Absenden der Anfrage per E-Mail.</p>
 
-      <p class="small-text">Mit dem Absenden stimmen Sie der Verarbeitung Ihrer Daten gemäß unserer <a href="/datenschutz.html" target="_blank">Datenschutzerklärung</a> zu.</p>
+    <p class="small-text">Mit dem Absenden stimmen Sie der Verarbeitung Ihrer Daten gemäß unserer <a href="/datenschutz.html" target="_blank">Datenschutzerklärung</a> zu.</p>
 
-      <button type="submit">Bestellanfrage senden</button>
-    </form>
-  </div>
+    <button type="submit">Bestellanfrage senden</button>
+  </form>
+</div>
 </main>
 
 <footer>
