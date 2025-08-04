@@ -41,6 +41,17 @@
 </header>
 
 <main>
+<div id="summaryModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000;">
+  <div style="background:white; max-width:600px; margin:5% auto; padding:2rem; border-radius:12px; position:relative;">
+    <h2>Bestellübersicht</h2>
+    <div id="summaryContent" style="margin-top:1rem; line-height:1.6;"></div>
+    <div style="margin-top:2rem; display:flex; justify-content:space-between;">
+      <button type="button" onclick="closeModal()" style="background:#ccc; color:#333;">Zurück</button>
+      <button type="button" onclick="document.querySelector('form').submit()">Jetzt absenden</button>
+    </div>
+  </div>
+</div>
+
   <section class="hero">
     <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=1200&q=80" alt="Leckeres Essen" loading="lazy" />
     <div class="hero-text">Schnell. Frisch. Lecker.</div>
@@ -155,7 +166,7 @@ df
 
     <p class="small-text">Mit dem Absenden stimmen Sie der Verarbeitung Ihrer Daten gemäß unserer <a href="/bestellueberischt.html" target="_blank">Datenschutzerklärung</a> zu.</p>
 
-    <button type="submit">Bestellanfrage senden</button>
+    <button type="button" onclick="showSummary()">Bestellanfrage senden</button>
   </form>
 </div>
 </main>
@@ -165,6 +176,37 @@ df
 </footer>
 
 <script>
+function showSummary() {
+  const produkt = pSel.options[pSel.selectedIndex]?.textContent || "-";
+  const lahma = lQ.value ? lQ.options[lQ.selectedIndex].text : "-";
+  const goez = gQ.value ? gQ.options[gQ.selectedIndex].text : "-";
+  const salat = lS?.value || "-";
+  const extras = [];
+  if (sp.checked) extras.push("Spinat");
+  if (ch.checked) extras.push("Käse");
+
+  const summaryHTML = `
+    <strong>Produkt:</strong> ${produkt}<br/>
+    ${pSel.value === 'lahmacun' ? `<strong>Menge Lahmacun:</strong> ${lahma}<br/><strong>Salat extra:</strong> ${salat}<br/>` : ''}
+    ${pSel.value === 'goezleme' ? `<strong>Menge Gözleme:</strong> ${goez}<br/><strong>Extras:</strong> ${extras.join(", ") || "-" }<br/>` : ''}
+    <strong>Lieferdatum:</strong> ${dateInput.value}<br/>
+    <strong>Lieferzeit:</strong> ${document.getElementById('lieferzeit').value}<br/>
+    <strong>Bezahlmethode:</strong> ${document.getElementById('payment').value}<br/>
+    <strong>Name:</strong> ${document.getElementById('name').value}<br/>
+    <strong>E-Mail:</strong> ${document.getElementById('email').value}<br/>
+    <strong>Telefon:</strong> ${document.getElementById('phone').value}<br/>
+    <strong>Adresse:</strong> ${document.getElementById('address').value}<br/>
+    <strong>Sonderwünsche:</strong> ${document.getElementById('wishes').value || "-"}<br/>
+    <strong>Gesamtpreis:</strong> ${tp.textContent.replace("Gesamtpreis: ", "")}
+  `;
+  document.getElementById('summaryContent').innerHTML = summaryHTML;
+  document.getElementById('summaryModal').style.display = 'block';
+}
+
+function closeModal() {
+  document.getElementById('summaryModal').style.display = 'none';
+}
+
   const dateInput = document.getElementById('date');
   const today = new Date();
   today.setDate(today.getDate() + 1);
