@@ -184,6 +184,11 @@ function showSummary() {
   const extras = [];
   if (sp.checked) extras.push("Spinat");
   if (ch.checked) extras.push("Käse");
+  // Preis extrahieren und MwSt. berechnen
+  const bruttoText = tp.textContent.replace("Gesamtpreis: ", "").replace("€", "").replace(",", ".").trim();
+  const netto = parseFloat(bruttoText);
+  const mwst = netto * 0.19;
+  const gesamt = netto + mwst;
 
   const summaryHTML = `
     <strong>Produkt:</strong> ${produkt}<br/>
@@ -198,6 +203,10 @@ function showSummary() {
     <strong>Adresse:</strong> ${document.getElementById('address').value}<br/>
     <strong>Sonderwünsche:</strong> ${document.getElementById('wishes').value || "-"}<br/>
     <strong>Gesamtpreis:</strong> ${tp.textContent.replace("Gesamtpreis: ", "")}
+<strong>Nettopreis:</strong> ${netto.toFixed(2).replace(".", ",")} €<br/>
+<strong>19 % MwSt.:</strong> ${mwst.toFixed(2).replace(".", ",")} €<br/>
+<strong>Gesamtpreis inkl. MwSt.:</strong> ${gesamt.toFixed(2).replace(".", ",")} €
+
   `;
   document.getElementById('summaryContent').innerHTML = summaryHTML;
   document.getElementById('summaryModal').style.display = 'block';
