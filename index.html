@@ -89,8 +89,8 @@
         <label><input type="checkbox" name="Extras" value="Käse" /> Käse (+0,80 €)</label>
       </fieldset>
     </div>
-
-    <label for="date" class="required">Lieferdatum (mind. 2 Tage Vorlauf):</label>
+df
+    <label for="date" class="required">Lieferdatum (mind. 1.Tag Vorlauf):</label>
     <input type="date" name="Lieferdatum" id="date" required />
 
     <label for="lieferzeit" class="required">Lieferzeit (zwischen 10:00 und 20:00 Uhr):</label>
@@ -151,7 +151,7 @@
     <label for="address" class="required">Lieferadresse:</label>
     <textarea name="Adresse" id="address" rows="3" required placeholder="Straße, Hausnummer, PLZ, Ort"></textarea>
 
-    <p class="small-text">Bitte beachten: Die Bestellung wird frisch zubereitet. Daher benötigen wir mindestens 2 Werktage Vorlaufzeit. Wir melden uns nach Absenden der Anfrage per E-Mail.</p>
+    <p class="small-text">Bitte beachten: Die Bestellung wird frisch zubereitet. Daher benötigen wir mindestens 1 Werktag Vorlaufzeit. Wir melden uns nach Absenden der Anfrage per E-Mail.</p>
 
     <p class="small-text">Mit dem Absenden stimmen Sie der Verarbeitung Ihrer Daten gemäß unserer <a href="/bestellueberischt.html" target="_blank">Datenschutzerklärung</a> zu.</p>
 
@@ -167,7 +167,7 @@
 <script>
   const dateInput = document.getElementById('date');
   const today = new Date();
-  today.setDate(today.getDate() + 2);
+  today.setDate(today.getDate() + 1);
   dateInput.min = today.toISOString().split('T')[0];
 
   const pricesUp = {
